@@ -1,0 +1,38 @@
+.java {
+  height: 150px;
+  width: auto;
+  margin-left: 15px;
+}
+
+/* .ftco-animate {
+  border: 2px solid red;
+  align-items: center;
+  justify-content: center;
+} */
+
+.testing {
+  margin-top: 20px;
+}
+
+.react {
+  margin-top: 10px;
+}
+
+.rest {
+  height: 75px;
+  width: auto;
+  margin-left: 20%;
+}
+
+.protractor {
+  margin-top: 18%;
+}
+
+.testng {
+  margin-top: 2%;
+}
+
+#p_info {
+  text-align: center;
+  padding: 2em;
+}
