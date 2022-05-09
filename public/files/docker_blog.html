@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Blog by Daipayan</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css" />
+  <link rel="stylesheet" href="css/animate.css" />
+
+  <link rel="stylesheet" href="css/owl.carousel.min.css" />
+  <link rel="stylesheet" href="css/owl.theme.default.min.css" />
+  <link rel="stylesheet" href="css/magnific-popup.css" />
+
+  <link rel="stylesheet" href="css/aos.css" />
+
+  <link rel="stylesheet" href="css/ionicons.min.css" />
+
+  <link rel="stylesheet" href="css/flaticon.css" />
+  <link rel="stylesheet" href="css/icomoon.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light site-navbar-target" id="ftco-navbar">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html"><span>D</span>aipayan</a>
+      <button class="navbar-toggler js-fh5co-nav-toggle fh5co-nav-toggle" type="button" data-toggle="collapse"
+        data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="oi oi-menu"></span> Menu
+      </button>
+
+      <div class="collapse navbar-collapse" id="ftco-nav">
+        <ul class="navbar-nav nav ml-auto">
+          <li class="nav-item">
+            <a href="../index.html" class="nav-link"><span>Home</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="../index.html#about-section" class="nav-link"><span>About</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="../index.html#resume-section" class="nav-link"><span>Resume</span></a>
+          </li>
+
+          <li class="nav-item">
+            <a href="../index.html#projects-section" class="nav-link"><span>Projects</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="../index.html#blog-section" class="nav-link"><span>My Blog</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="../index.html#contact-section" class="nav-link"><span>Contact</span></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div><br><br></div>
+  <section class="ftco-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 ftco-animate">
+          <h2 class="mb-3">
+            Set up Docker to run a selenium grid server on your local machine.
+          </h2>
+          <p>
+            Selenium Grid allows us to run tests in parallel on multiple machines, and to manage different browser
+            versions and browser configurations centrally (instead of in each individual test). <br />
+
+            Selenium Grid allows the execution of WebDriver scripts on remote machines (virtual or real) by routing
+            commands sent by the client to remote browser instances. It aims to provide an easy way to run tests in
+            parallel on multiple machines. <br />
+
+            <b>Purposes and main functionalities:</b>
+          <ul>
+            <li>Running tests in parallel</li>
+            <li>Management and control of the nodes / environment where the browsers run</li>
+            <li>Cross-platform testing</li>
+            <li>Scaling</li>
+          </ul>
+          Docker enables you to separate your applications from your infrastructure so you can deliver software quickly.
+          So using docker , we would not have to spend resource by enabling making containers on the same machine ,also
+          saving time on environment set up again and again, we can reuse the containers once setup to enable us to
+          focus more on the actual automation work at hand. <br> <br>
+
+          <u>To be precise this article would be useful to you ... </u> <br />
+
+
+
+          Well you can say , this is another <b>"5-min Craft"</b> article for Docker
+          Selenium Grid set up.
+          </p>
+          <p style="display: flex;justify-content: center;">
+            <img src="images/Docker.jpeg" alt="" class="img-fluid" />
+          </p>
+
+          <h2 class="mb-3 mt-5">
+            Steps to set up Docker Selenium Grid on your local machine.
+          </h2>
+          <p>
+            1.<b> Install Docker on your local </b><br />
+            Refer Google on how to Install Docker on your local machine. <br />
+            Once the installation is complete, you can now proceed to the next step. <br />
+            2.<b> Open the terminal and pull the base Selenium image from Docker Hub </b><br />
+          </p>
+          <pre><code>
+              docker pull selenium/hub
+              docker pull selenium/node-chrome-debug
+              docker pull selenium/node-firefox-debug                               
+           </code></pre>
+          <p> 2.<b> Create a Network </b><br /></p>
+          </p>
+          <pre><code>
+            docker network create grid                              
+         </code></pre>
+          <p> 3.<b> Create a Docker container for the Selenium Hub </b><br /></p>
+          <pre><code>
+              $ docker run -d -p 4444:4444 --net grid --name selenium-hub selenium/hub
+          </code></pre>
+
+
+          <p>
+            -d : running the container in detached mode.<br />
+            -p : Binding port local Machine port 4444 to container port<br />
+            --net : to make the programs inside the Docker container look like they are running on the host itself, from
+            the perspective of the network. It allows the container greater network access than it can normally get.
+            <br />
+            --name : Naming the container<br />
+          </p>
+          <p> 4.<b> Create and run the Docker firefox node container</b><br /></p>
+          <p>
+          <pre><code>
+              $ docker run -d --net grid -e SE_EVENT_BUS_HOST=selenium-hub \
+              --shm-size="2g" \
+              -e SE_EVENT_BUS_PUBLISH_PORT=4442 \
+              -e SE_EVENT_BUS_SUBSCRIBE_PORT=4443 \
+              -v /dev/shm:/dev/shm \
+              selenium/node-firefox
+            </code></pre>
+          </p>
+          <p> 5.<b> Create and run the Docker Chrome node container</b><br /></p>
+          <p>
+          <pre><code>
+              $ docker run -d -P --link selenium-hub:hub  --net grid -v /dev/shm:/dev/shm \
+              -e SE_EVENT_BUS_HOST=selenium-hub \
+              -e SE_EVENT_BUS_PUBLISH_PORT=4442 \
+              -e SE_EVENT_BUS_SUBSCRIBE_PORT=4443 \
+              --name node-chrome selenium/node-chrome
+            </code></pre>
+          </p>
+          <p>
+            -e : environment variables is imp<br />
+            -P : Assigns random port<br />
+          </p>
+          <br />
+          <br />
+          <p>Some import docker commands</p>
+          <pre><code>
+              $ docker ps
+              $ docker ps -a
+              $ docker stop selenium-hub
+              $ docker rm selenium-hub
+              $ docker network ls
+              $ docker network rm grid
+              $ docker network create grid
+              $ docker network ls
+              $ docker network rm grid
+              $ docker network ls
+              </code></pre>
+          <p>
+          <ul>
+            <li>do
+              <pre><code>$ docker PS</code></li>
+            <li> Get the port assigned to selenium-chrome-node</li>
+            <li>And Check it in VNC</li>
+          </ul>
+          </p>
+          <br>
+      
+          <p>Sample Code Snippet for Test</p>
+          <pre><code>
+              public class DemoDocker {	
+                @Test
+                public void demoTestChrome() throws MalformedURLException, InterruptedException {
+                  try {		
+                      DesiredCapabilities cap = new DesiredCapabilities();
+                      cap.setBrowserName(BrowserType.CHROME);	
+                      WebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444"),cap);
+                      driver.get("https://www.google.com");
+                      System.out.println("Naviagating to Google Chrome");
+                      driver.findElement(By.name("q"));
+                      Thread.sleep(10000);
+                      driver.quit();
+                      System.out.println("Done Google Chrome");		
+                    }
+                  catch (Exception e) {
+                    // TODO: handle exception
+                    e.getMessage();
+                    }	
+                }
+              }
+          </code>
+          </pre>
+
+
+              <div class="about-author d-flex p-4 bg-light">
+                <div class="bio mr-5">
+                  <img src="images/AboutMe.jpg" alt="Image placeholder" class="img-fluid mb-4"
+                    style="height: 125px; width: 234px;" />
+                </div>
+                <div class="desc">
+                  <h3>Daipayan Sarkar</h3>
+                  <p>
+                    Well! I am aware this is not the perfect blog but keeping in mind the purpose I have written this
+                    post.
+                    But as and when I get time , I would making changes to this blog to bring you a complete overview of
+                    this topic.
+                  </p>
+                </div>
+              </div>
+
+
+
+              <div class="comment-form-wrap pt-5">
+                <h3 class="mb-5">Leave a comment</h3>
+                <form action="#" class="p-5 bg-light">
+                  <div class="form-group">
+                    <label for="name">Name *</label>
+                    <input type="text" class="form-control" id="name" />
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" class="form-control" id="email" />
+                  </div>
+                  <div class="form-group">
+                    <label for="website">Website</label>
+                    <input type="url" class="form-control" id="website" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea name="" id="message" cols="30" rows="10" class="form-control"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <input type="submit" value="Post Comment" class="btn py-3 px-4 btn-primary" />
+                  </div>
+                </form>
+              </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 text-center">
+
+          <p style="color: black; font-size: 8px;">
+            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            Copyright &copy;
+            <script>document.write(new Date().getFullYear());</script> All rights reserved.
+
+
+          </p>
+        </div>
+      </div>
+    </div>
+    </footer>
+
+
+    <!-- loader -->
+    <div id="ftco-loader" class="show fullscreen">
+      <svg class="circular" width="48px" height="48px">
+        <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4"   stroke="#eeeeee" />
+        <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
+          stroke="#F96D00" />
+      </svg>
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.1.3.js"></script>
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.stellar.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/jquery.animateNumber.min.js"></script>
+    <script src="js/scrollax.min.js"></script>
+
+    <script src="js/main.js"></script>
+  </section>
+</body>
+
+</html>
